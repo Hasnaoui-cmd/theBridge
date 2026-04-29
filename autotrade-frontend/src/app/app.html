@@ -1,0 +1,40 @@
+<div class="chat-container">
+  <div class="header">
+    <h1>⚖️ AutoTrade-Comply AI</h1>
+    <p>Expert Assistant for Moroccan Trade Compliance</p>
+  </div>
+
+  <div class="chat-history">
+    <div *ngFor="let msg of messages" class="message-row" [ngClass]="msg.role">
+      <div class="bubble">
+        <strong>{{ msg.role === 'user' ? '👤 You' : '🤖 AI' }}</strong>
+        <div class="markdown-body" *ngIf="msg.htmlContent" [innerHTML]="msg.htmlContent"></div>
+        <p *ngIf="!msg.htmlContent">{{ msg.content }}</p>
+
+        <div class="sources" *ngIf="msg.sources && msg.sources.length > 0">
+          <hr>
+          <small><strong>🔍 Audit Trail:</strong></small>
+          <ul>
+            <li *ngFor="let doc of msg.sources">📄 {{ doc }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading" class="message-row ai">
+      <div class="bubble loading">
+        <em>⏳ The AI is reading the law...</em>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-area">
+    <button class="mic-btn" [class.recording]="isRecording" (click)="toggleRecording()" [disabled]="isLoading">
+      {{ isRecording ? '🛑' : '🎙️' }}
+    </button>
+    <input type="text" [(ngModel)]="userQuestion" (keyup.enter)="sendMessage()"
+      placeholder="Type or speak your customs question here..." [disabled]="isLoading || isRecording" />
+    <button class="send-btn" (click)="sendMessage()"
+      [disabled]="isLoading || !userQuestion || isRecording">Send</button>
+  </div>
+</div>
