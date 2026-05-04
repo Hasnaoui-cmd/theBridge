@@ -11,21 +11,25 @@ export interface ChatResponse {
   providedIn: 'root'
 })
 export class ChatService {
-  private apiUrl = 'http://127.0.0.1:8000/chat';
+  private apiUrl = 'http://127.0.0.1:8000';
 
   constructor(private http: HttpClient) { }
 
-  // Now accepts a history array!
-  sendMessage(question: string, history: any[]): Observable<ChatResponse> {
-    return this.http.post<ChatResponse>(this.apiUrl, { question, history });
+  // Fetch old messages when the user opens the app
+  getHistory(sessionId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/history/${sessionId}`);
   }
 
-  // Now accepts a history array!
-  sendAudioMessage(audioBlob: Blob, history: any[]): Observable<any> {
+  // Send just the session ID now!
+  sendMessage(question: string, sessionId: string): Observable<ChatResponse> {
+    return this.http.post<ChatResponse>(`${this.apiUrl}/chat`, { question, session_id: sessionId });
+  }
+
+  // Audio requires the session ID too
+  sendAudioMessage(audioBlob: Blob, sessionId: string): Observable<any> {
     const formData = new FormData();
     formData.append('file', audioBlob, 'voice_memo.webm');
-    // Convert the history array into a string so it can travel with the audio file
-    formData.append('history', JSON.stringify(history));
-    return this.http.post<any>('http://127.0.0.1:8000/audio-chat', formData);
+    formData.append('session_id', sessionId);
+    return this.http.post<any>(`${this.apiUrl}/audio-chat`, formData);
   }
 }

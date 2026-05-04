@@ -1,40 +1,292 @@
-<div class="chat-container">
-  <div class="header">
-    <h1>⚖️ AutoTrade-Comply AI</h1>
-    <p>Expert Assistant for Moroccan Trade Compliance</p>
-  </div>
+<!-- ============================================================
+     AutoTrade-Comply — Premium Dark AI Chat Interface
+     Teaser Overlay: Chat is always visible, modal pops on interact
+     ============================================================ -->
 
-  <div class="chat-history">
-    <div *ngFor="let msg of messages" class="message-row" [ngClass]="msg.role">
-      <div class="bubble">
-        <strong>{{ msg.role === 'user' ? '👤 You' : '🤖 AI' }}</strong>
-        <div class="markdown-body" *ngIf="msg.htmlContent" [innerHTML]="msg.htmlContent"></div>
-        <p *ngIf="!msg.htmlContent">{{ msg.content }}</p>
+<div class="app-shell">
 
-        <div class="sources" *ngIf="msg.sources && msg.sources.length > 0">
-          <hr>
-          <small><strong>🔍 Audit Trail:</strong></small>
-          <ul>
-            <li *ngFor="let doc of msg.sources">📄 {{ doc }}</li>
-          </ul>
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar">
+    <!-- Brand -->
+    <div class="sidebar-brand">
+      <div class="sidebar-brand-icon">
+        <span class="material-symbols-outlined">auto_awesome</span>
+      </div>
+      <div>
+        <div class="sidebar-brand-title">AutoTrade</div>
+        <div class="sidebar-brand-sub">Comply AI</div>
+      </div>
+    </div>
+
+    <!-- Nav buttons -->
+    <nav class="sidebar-nav">
+      <button class="sidebar-btn active">
+        <span class="material-symbols-outlined">add_comment</span>
+        <span>Nouvelle discussion</span>
+      </button>
+      <button class="sidebar-btn">
+        <span class="material-symbols-outlined">history</span>
+        <span>Historique</span>
+      </button>
+      <button class="sidebar-btn">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span>Modèles</span>
+      </button>
+
+      <div class="sidebar-section-label">Historique récent</div>
+      <button class="sidebar-history-btn">Marketing Strategy Q4</button>
+      <button class="sidebar-history-btn">Python Data Analysis</button>
+      <button class="sidebar-history-btn">UI Design Feedback</button>
+    </nav>
+
+    <!-- Footer -->
+    <div class="sidebar-footer">
+      <button class="sidebar-cta">Passer à la version Pro</button>
+      <hr class="sidebar-divider" />
+      <button class="sidebar-btn">
+        <span class="material-symbols-outlined">settings</span>
+        <span>Paramètres</span>
+      </button>
+      <button class="sidebar-btn">
+        <span class="material-symbols-outlined">help_outline</span>
+        <span>Centre d'aide</span>
+      </button>
+
+      <!-- Log Out (shown when logged in) -->
+      <button class="sidebar-btn" *ngIf="user" (click)="logout()">
+        <span class="material-symbols-outlined">logout</span>
+        <span class="text-red-400">Se déconnecter</span>
+      </button>
+
+      <!-- Log In (shown when NOT logged in) -->
+      <button class="sidebar-btn" *ngIf="!user" (click)="showLoginModal = true">
+        <span class="material-symbols-outlined">login</span>
+        <span style="color: #818cf8;">Se connecter</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ===================== MAIN CHAT AREA ===================== -->
+  <main class="main-area">
+
+    <!-- Top Navigation Bar -->
+    <header class="top-nav">
+      <div class="top-nav-left">
+        <span class="top-nav-title">AutoTrade-Comply</span>
+        <nav class="top-nav-links">
+          <a class="top-nav-link active" href="javascript:void(0)">Model</a>
+          <a class="top-nav-link" href="javascript:void(0)">Plugins</a>
+          <a class="top-nav-link" href="javascript:void(0)">History</a>
+        </nav>
+      </div>
+      <div class="top-nav-right">
+        <div class="top-nav-search">
+          <span class="material-symbols-outlined">search</span>
+          <input type="text" placeholder="Rechercher une discussion..." />
+        </div>
+        <div class="top-nav-icons">
+          <button class="top-nav-icon">
+            <span class="material-symbols-outlined">tune</span>
+          </button>
+          <button class="top-nav-icon">
+            <span class="material-symbols-outlined">ios_share</span>
+          </button>
+          <div class="top-nav-avatar">
+            <img alt="User profile"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAu7OBE97_61RmVq_EgAvkHhgaMLPFTue86-uXzd_pt6MlwF4ezHB5P7V3ekUCYuN4NdzwfoFxntu-EdfZswzlKsI25hy9qYhX7f6hN8PfTLiVYuhq1xr8Ugk0WWoFUo800rvTChs1XTXhhcgis0iKF9aQIHBmavo65c_ujrYIogB85qAXJs70CJ2NXqE_aD94LgMN6-UPYJvVuoKNE1v6Zf8T05F5PcEH5SRFuZmhQNf-0-SvYYNoVNMIbZay4gmXg2xqfk7zyw" />
+          </div>
         </div>
       </div>
-    </div>
+    </header>
 
-    <div *ngIf="isLoading" class="message-row ai">
-      <div class="bubble loading">
-        <em>⏳ The AI is reading the law...</em>
+    <!-- Conversation Canvas -->
+    <div class="conversation-canvas">
+      <div class="conversation-inner">
+
+        <!-- Welcome teaser when not logged in -->
+        <div class="msg-row-ai" *ngIf="!user && messages.length === 0">
+          <div class="ai-avatar">
+            <span class="material-symbols-outlined">bolt</span>
+          </div>
+          <div class="ai-msg-body">
+            <p class="ai-text">Bienvenue sur AutoTrade-Comply. Connectez-vous pour commencer à poser vos questions sur la douane marocaine.</p>
+          </div>
+        </div>
+
+        <!-- Message loop — bound to existing messages array -->
+        <ng-container *ngFor="let msg of messages">
+
+          <!-- ═══ AI Message ═══ -->
+          <div class="msg-row-ai" *ngIf="msg.role === 'ai'">
+            <div class="ai-avatar">
+              <span class="material-symbols-outlined">bolt</span>
+            </div>
+            <div class="ai-msg-body">
+              <!-- Rendered Markdown -->
+              <div class="markdown-body" *ngIf="msg.htmlContent" [innerHTML]="msg.htmlContent"></div>
+              <!-- Plain-text fallback -->
+              <p class="ai-text" *ngIf="!msg.htmlContent">{{ msg.content }}</p>
+
+              <!-- Audit trail sources -->
+              <div class="sources-block" *ngIf="msg.sources && msg.sources.length > 0">
+                <small class="sources-label">🔍 Audit Trail</small>
+                <ul class="sources-list">
+                  <li *ngFor="let doc of msg.sources">📄 {{ doc }}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ User Message ═══ -->
+          <div class="msg-row-user" *ngIf="msg.role === 'user'">
+            <div class="user-bubble">{{ msg.content }}</div>
+          </div>
+
+        </ng-container>
+
+        <!-- ═══ Typing Indicator ═══ -->
+        <div class="typing-row" *ngIf="isLoading">
+          <div class="typing-avatar">
+            <span class="material-symbols-outlined">auto_awesome</span>
+          </div>
+          <div class="typing-dots">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+
       </div>
     </div>
-  </div>
 
-  <div class="input-area">
-    <button class="mic-btn" [class.recording]="isRecording" (click)="toggleRecording()" [disabled]="isLoading">
-      {{ isRecording ? '🛑' : '🎙️' }}
+    <!-- Input Dock -->
+    <div class="input-dock">
+      <div class="input-dock-inner">
+
+        <!-- Suggestion pills — shown only on first visit -->
+        <div class="suggestion-pills" *ngIf="messages.length <= 1">
+          <button class="suggestion-pill"
+            (click)="userQuestion='Explain the latest customs regulations'; sendMessage()">
+            Explain the latest customs regulations
+          </button>
+          <button class="suggestion-pill" (click)="userQuestion='How do I classify electronics?'; sendMessage()">
+            How do I classify electronics?
+          </button>
+          <button class="suggestion-pill"
+            (click)="userQuestion='What are the import duties for vehicles?'; sendMessage()">
+            What are the import duties for vehicles?
+          </button>
+        </div>
+
+        <!-- Main pill input -->
+        <div class="pill-input-bar">
+          <button class="pill-icon-btn" [disabled]="isLoading">
+            <span class="material-symbols-outlined">attach_file</span>
+          </button>
+
+          <input type="text" [(ngModel)]="userQuestion" (keyup.enter)="sendMessage()"
+            (focus)="!user && (showLoginModal = true)"
+            [disabled]="isLoading || isRecording" placeholder="Envoyer un message à AutoTrade-Comply..." />
+
+          <button class="pill-icon-btn" [class.recording]="isRecording" (click)="toggleRecording()"
+            [disabled]="isLoading">
+            <span class="material-symbols-outlined">
+              {{ isRecording ? 'stop_circle' : 'mic' }}
+            </span>
+          </button>
+
+          <button class="send-btn" (click)="sendMessage()" [disabled]="isLoading || !userQuestion || isRecording">
+            <span class="material-symbols-outlined">arrow_upward</span>
+          </button>
+        </div>
+
+        <p class="disclaimer">AutoTrade-Comply peut faire des erreurs. Vérifiez les informations importantes.</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ========================================== -->
+<!-- 🔒 LOGIN MODAL OVERLAY                     -->
+<!-- ========================================== -->
+<div *ngIf="showLoginModal && !user"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+  (click)="showLoginModal = false">
+
+  <!-- Modal Card (stop click propagation so clicking inside doesn't close it) -->
+  <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-8 w-full max-w-md shadow-2xl relative"
+    (click)="$event.stopPropagation()">
+
+    <!-- Close Button -->
+    <button (click)="showLoginModal = false"
+      class="absolute top-4 right-4 text-zinc-500 hover:text-zinc-200 transition-colors"
+      style="background:none;border:none;cursor:pointer;padding:0;margin:0;">
+      <span class="material-symbols-outlined">close</span>
     </button>
-    <input type="text" [(ngModel)]="userQuestion" (keyup.enter)="sendMessage()"
-      placeholder="Type or speak your customs question here..." [disabled]="isLoading || isRecording" />
-    <button class="send-btn" (click)="sendMessage()"
-      [disabled]="isLoading || !userQuestion || isRecording">Send</button>
+
+    <!-- Logo / Header -->
+    <div class="flex flex-col items-center mb-8">
+      <div class="w-12 h-12 bg-indigo-600 rounded-xl flex items-center justify-center mb-4">
+        <span class="text-white text-2xl">✨</span>
+      </div>
+      <h1 class="text-2xl font-bold text-zinc-100">AutoTrade-Comply</h1>
+      <p class="text-zinc-500 mt-2 text-sm">Intelligence Commerciale d'Entreprise</p>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="authError" class="bg-red-900/50 border border-red-500 text-red-200 p-3 rounded-lg text-sm mb-4">
+      {{ authError }}
+    </div>
+
+    <!-- Login Form -->
+    <div class="space-y-4">
+      <div>
+        <label class="block text-zinc-400 text-sm mb-1">Adresse E-mail</label>
+        <input type="email" [(ngModel)]="authEmail"
+          class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-zinc-200 focus:outline-none focus:border-indigo-500 transition-colors"
+          placeholder="vous@entreprise.com">
+      </div>
+
+      <div>
+        <label class="block text-zinc-400 text-sm mb-1">Mot de passe</label>
+        <input type="password" [(ngModel)]="authPassword"
+          class="w-full bg-zinc-950 border border-zinc-800 rounded-lg px-4 py-3 text-zinc-200 focus:outline-none focus:border-indigo-500 transition-colors"
+          placeholder="••••••••">
+      </div>
+
+      <button (click)="handleAuth()" [disabled]="isAuthLoading"
+        class="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white rounded-lg px-4 py-3 font-medium transition-colors mt-2">
+        {{ isAuthLoading ? 'Veuillez patienter...' : (isSignUpMode ? 'Créer un compte' : 'Se connecter') }}
+      </button>
+    </div>
+
+    <!-- Divider -->
+    <div class="flex items-center my-6">
+      <div class="flex-1 border-t border-zinc-800"></div>
+      <span class="px-4 text-xs text-zinc-600 uppercase tracking-wider font-semibold">ou</span>
+      <div class="flex-1 border-t border-zinc-800"></div>
+    </div>
+
+    <!-- Google Sign-In Button -->
+    <button (click)="signInWithGoogle()"
+      class="w-full flex items-center justify-center gap-3 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-200 rounded-lg px-4 py-3 font-medium transition-colors">
+      <svg width="18" height="18" viewBox="0 0 48 48">
+        <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+        <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+        <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+        <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+      </svg>
+      <span>Continuer avec Google</span>
+    </button>
+
+    <!-- Toggle Login/Signup -->
+    <div class="mt-6 text-center">
+      <button (click)="isSignUpMode = !isSignUpMode"
+        class="text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+        style="background:none;border:none;cursor:pointer;">
+        {{ isSignUpMode ? 'Vous avez déjà un compte ? Se connecter' : 'Pas encore de compte ? En créer un' }}
+      </button>
+    </div>
   </div>
 </div>

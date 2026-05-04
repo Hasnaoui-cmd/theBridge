@@ -1,7 +1,9 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ChatService, ChatResponse } from './chat';
+import { ChatService } from './chat';
+import { AuthService } from './auth.service'; // <-- Imported Auth Service
+import { User } from '@supabase/supabase-js'; // <-- Imported Supabase User
 import { marked } from 'marked';
 
 interface Message {
@@ -18,47 +20,122 @@ interface Message {
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit {
+  // --- AUTHENTICATION STATE ---
+  user: User | null = null;
+  authEmail = '';
+  authPassword = '';
+  isAuthLoading = false;
+  authError = '';
+  isSignUpMode = false;
+  showLoginModal = false;
+
+  // --- CHAT STATE ---
   userQuestion: string = '';
   isLoading: boolean = false;
+  sessionId: string = ''; // Now securely tied to their Supabase ID
   isRecording: boolean = false;
   mediaRecorder: any;
   audioChunks: any[] = [];
+  messages: Message[] = [];
 
-  messages: Message[] = [
-    {
-      role: 'ai',
-      content: 'Hello! I am the AutoTrade-Comply AI. Ask me about Moroccan Customs or European Trade Law.',
-      htmlContent: '<p>Hello! I am the AutoTrade-Comply AI. Ask me about Moroccan Customs or European Trade Law.</p>'
-    }
-  ];
+  constructor(
+    private chatService: ChatService,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
-  constructor(private chatService: ChatService, private cdr: ChangeDetectorRef) { }
-
-  // --- HELPER: GET HISTORY ---
-  // Grabs the last 6 messages to give the AI context without overloading its memory
-  getChatHistory() {
-    return this.messages.slice(-6).map(m => ({
-      role: m.role,
-      content: m.content
-    }));
+  // --- RUNS WHEN THE PAGE LOADS ---
+  ngOnInit() {
+    // Listen to the auth state. If they log in, load their specific history!
+    this.authService.user$.subscribe(user => {
+      this.user = user;
+      if (user) {
+        this.sessionId = user.id; // The user's unique ID is now their session ID
+        this.showLoginModal = false; // Close the modal on successful login
+        this.loadUserHistory();
+      } else {
+        this.messages = [];
+        this.sessionId = '';
+      }
+      this.cdr.detectChanges();
+    });
   }
 
-  // --- TEXT LOGIC ---
+  // --- LOGIN / SIGNUP LOGIC ---
+  async handleAuth() {
+    if (!this.authEmail || !this.authPassword) return;
+    this.isAuthLoading = true;
+    this.authError = '';
+
+    try {
+      const { error } = this.isSignUpMode
+        ? await this.authService.signUp(this.authEmail, this.authPassword)
+        : await this.authService.signIn(this.authEmail, this.authPassword);
+
+      if (error) {
+        this.authError = error.message;
+      } else {
+        this.showLoginModal = false;
+      }
+    } catch (err: any) {
+      this.authError = err.message;
+    } finally {
+      this.isAuthLoading = false;
+      this.cdr.detectChanges();
+    }
+  }
+
+  async logout() {
+    await this.authService.signOut();
+  }
+
+  async signInWithGoogle() {
+    this.authError = '';
+    const { error } = await this.authService.signInWithGoogle();
+    if (error) {
+      this.authError = error.message;
+      this.cdr.detectChanges();
+    }
+  }
+
+  // --- CHAT LOGIC ---
+  loadUserHistory() {
+    this.isLoading = true;
+    this.chatService.getHistory(this.sessionId).subscribe({
+      next: async (res: any) => {
+        this.messages = []; // Clear the array first
+        if (res.messages && res.messages.length > 0) {
+          for (let msg of res.messages) {
+            const parsedHtml = msg.role === 'ai' ? await marked.parse(msg.content) : undefined;
+            this.messages.push({ role: msg.role, content: msg.content, htmlContent: parsedHtml });
+          }
+        } else {
+          // Default welcome message for new users
+          this.messages = [{ role: 'ai', content: 'Welcome to AutoTrade-Comply. Your secure session has started.', htmlContent: '<p>Welcome to AutoTrade-Comply. Your secure session has started.</p>' }];
+        }
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error("Failed to load history:", err);
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
   sendMessage() {
+    if (!this.user) { this.showLoginModal = true; return; }
     if (!this.userQuestion.trim()) return;
     const query = this.userQuestion;
-
-    // Grab the history BEFORE adding the new question
-    const historyPayload = this.getChatHistory();
 
     this.messages = [...this.messages, { role: 'user', content: query }];
     this.userQuestion = '';
     this.isLoading = true;
     this.cdr.detectChanges();
 
-    // Send the query AND the history
-    this.chatService.sendMessage(query, historyPayload).subscribe({
+    this.chatService.sendMessage(query, this.sessionId).subscribe({
       next: async (res: any) => await this.handleResponse(res),
       error: (err) => this.handleError(err)
     });
@@ -66,6 +143,7 @@ export class App {
 
   // --- AUDIO LOGIC ---
   async toggleRecording() {
+    if (!this.user) { this.showLoginModal = true; return; }
     if (this.isRecording) {
       this.stopRecording();
     } else {
@@ -108,11 +186,7 @@ export class App {
   }
 
   processAudio(blob: Blob) {
-    // Grab the history BEFORE sending the audio
-    const historyPayload = this.getChatHistory();
-
-    // Send the audio AND the history
-    this.chatService.sendAudioMessage(blob, historyPayload).subscribe({
+    this.chatService.sendAudioMessage(blob, this.sessionId).subscribe({
       next: async (res: any) => {
         if (res.transcription) {
           this.messages = [...this.messages, { role: 'user', content: '🎤 ' + res.transcription }];

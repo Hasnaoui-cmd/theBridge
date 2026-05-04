@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "primary-fixed-dim": "#c0c1ff",
+                        "on-surface": "#e5e1e4",
+                        "on-primary-fixed": "#07006c",
+                        "tertiary-container": "#d97721",
+                        "surface": "#131315",
+                        "secondary": "#ddb7ff",
+                        "on-secondary-container": "#d6a9ff",
+                        "on-secondary-fixed": "#2c0051",
+                        "surface-container-highest": "#353437",
+                        "on-tertiary": "#4f2500",
+                        "background": "#131315",
+                        "on-primary": "#1000a9",
+                        "surface-container-low": "#1c1b1d",
+                        "tertiary": "#ffb783",
+                        "outline": "#908fa0",
+                        "tertiary-fixed-dim": "#ffb783",
+                        "error": "#ffb4ab",
+                        "on-tertiary-container": "#452000",
+                        "surface-container-high": "#2a2a2c",
+                        "on-tertiary-fixed": "#301400",
+                        "on-secondary-fixed-variant": "#6900b3",
+                        "primary": "#c0c1ff",
+                        "surface-tint": "#c0c1ff",
+                        "inverse-primary": "#494bd6",
+                        "on-error-container": "#ffdad6",
+                        "inverse-surface": "#e5e1e4",
+                        "on-surface-variant": "#c7c4d7",
+                        "secondary-container": "#6f00be",
+                        "secondary-fixed-dim": "#ddb7ff",
+                        "surface-container-lowest": "#0e0e10",
+                        "error-container": "#93000a",
+                        "surface-dim": "#131315",
+                        "tertiary-fixed": "#ffdcc5",
+                        "on-primary-fixed-variant": "#2f2ebe",
+                        "inverse-on-surface": "#313032",
+                        "primary-fixed": "#e1e0ff",
+                        "on-tertiary-fixed-variant": "#703700",
+                        "on-background": "#e5e1e4",
+                        "secondary-fixed": "#f0dbff",
+                        "on-secondary": "#490080",
+                        "outline-variant": "#464554",
+                        "primary-container": "#8083ff",
+                        "on-error": "#690005",
+                        "surface-container": "#201f22",
+                        "surface-bright": "#39393b",
+                        "on-primary-container": "#0d0096",
+                        "surface-variant": "#353437"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "inter": ["Inter", "sans-serif"],
+                        "label-caps": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "h2": ["Inter"],
+                        "code": ["Monaco, monospace"],
+                        "body-base": ["Inter"],
+                        "h1": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-zinc-950 text-on-surface antialiased overflow-hidden">
+<div class="flex h-screen w-full">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-[280px] border-r border-zinc-800 bg-zinc-900 shadow-2xl shadow-black/50 flex flex-col gap-2 p-4 h-screen font-inter text-sm antialiased tracking-tight">
+<!-- Header -->
+<div class="mb-6 px-2">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-container to-secondary-container flex items-center justify-center shadow-[0_0_15px_rgba(128,131,255,0.2)]">
+<span class="material-symbols-outlined text-zinc-50" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+</div>
+<div>
+<h1 class="text-xl font-black text-zinc-50 tracking-tighter">Bridge</h1>
+<p class="text-[10px] uppercase tracking-widest text-zinc-500 font-bold">Professional Suite</p>
+</div>
+</div>
+</div>
+<!-- Primary Actions -->
+<nav class="flex-1 flex flex-col gap-1">
+<button class="bg-zinc-800 text-zinc-50 font-medium rounded-lg px-3 py-2 flex items-center gap-3 scale-98 active:scale-95 transition-transform ease-out">
+<span class="material-symbols-outlined text-indigo-400">add_comment</span>
+<span>New Chat</span>
+</button>
+<button class="text-zinc-500 hover:text-zinc-300 px-3 py-2 flex items-center gap-3 transition-all duration-200 hover:bg-zinc-800/50 rounded-lg">
+<span class="material-symbols-outlined">history</span>
+<span>Chat History</span>
+</button>
+<button class="text-zinc-500 hover:text-zinc-300 px-3 py-2 flex items-center gap-3 transition-all duration-200 hover:bg-zinc-800/50 rounded-lg">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Templates</span>
+</button>
+<div class="mt-8 mb-2 px-3 text-[10px] uppercase tracking-widest text-zinc-600 font-bold">Recent History</div>
+<div class="space-y-1">
+<button class="w-full text-left text-zinc-500 hover:text-zinc-300 px-3 py-1.5 text-xs truncate transition-colors">Marketing Strategy Q4</button>
+<button class="w-full text-left text-zinc-500 hover:text-zinc-300 px-3 py-1.5 text-xs truncate transition-colors">Python Data Analysis</button>
+<button class="w-full text-left text-zinc-500 hover:text-zinc-300 px-3 py-1.5 text-xs truncate transition-colors">UI Design Feedback</button>
+</div>
+</nav>
+<!-- CTA & Footer -->
+<div class="mt-auto space-y-4">
+<button class="w-full bg-primary-container/10 border border-primary-container/20 text-primary-fixed-dim py-3 px-4 rounded-xl text-xs font-semibold hover:bg-primary-container/20 transition-all">
+                    Upgrade to Pro
+                </button>
+<div class="flex flex-col gap-1 border-t border-zinc-800 pt-4">
+<button class="text-zinc-500 hover:text-zinc-300 px-3 py-2 flex items-center gap-3 transition-all duration-200 hover:bg-zinc-800/50 rounded-lg">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</button>
+<button class="text-zinc-500 hover:text-zinc-300 px-3 py-2 flex items-center gap-3 transition-all duration-200 hover:bg-zinc-800/50 rounded-lg">
+<span class="material-symbols-outlined">help_outline</span>
+<span>Help Center</span>
+</button>
+</div>
+</div>
+</aside>
+<!-- Main Chat Area -->
+<main class="flex-1 ml-[280px] flex flex-col h-full bg-zinc-950 relative">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-6 py-4 w-full sticky top-0 bg-zinc-950/70 backdrop-blur-xl border-b border-zinc-800/50 z-40 font-inter text-sm font-medium">
+<div class="flex items-center gap-6">
+<span class="text-lg font-bold text-zinc-50">Bridge</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-indigo-400 border-b-2 border-indigo-500 pb-1" href="#">Model</a>
+<a class="text-zinc-400 hover:text-zinc-200 transition-colors" href="#">Plugins</a>
+<a class="text-zinc-400 hover:text-zinc-200 transition-colors" href="#">History</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex items-center bg-zinc-900 border border-zinc-800 rounded-full px-3 py-1.5 gap-2">
+<span class="material-symbols-outlined text-zinc-500 text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 p-0 text-xs text-zinc-300 placeholder:text-zinc-600 w-48" placeholder="Search conversations..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-zinc-400 cursor-pointer hover:text-zinc-50 transition-colors">tune</span>
+<span class="material-symbols-outlined text-zinc-400 cursor-pointer hover:text-zinc-50 transition-colors">ios_share</span>
+<div class="w-8 h-8 rounded-full bg-zinc-800 overflow-hidden ml-2 ring-2 ring-zinc-800">
+<img alt="User profile" data-alt="A professional user portrait profile picture in a sleek digital interface, set against a dark minimalist studio background. The image style is polished and high-end, featuring soft focused rim lighting that creates a professional executive aesthetic. The color palette is dominated by deep blacks and cool grays to maintain the dark mode theme consistency." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAu7OBE97_61RmVq_EgAvkHhgaMLPFTue86-uXzd_pt6MlwF4ezHB5P7V3ekUCYuN4NdzwfoFxntu-EdfZswzlKsI25hy9qYhX7f6hN8PfTLiVYuhq1xr8Ugk0WWoFUo800rvTChs1XTXhhcgis0iKF9aQIHBmavo65c_ujrYIogB85qAXJs70CJ2NXqE_aD94LgMN6-UPYJvVuoKNE1v6Zf8T05F5PcEH5SRFuZmhQNf-0-SvYYNoVNMIbZay4gmXg2xqfk7zyw"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Conversation Canvas -->
+<div class="flex-1 overflow-y-auto px-4 py-8 no-scrollbar">
+<div class="max-w-[800px] mx-auto space-y-12">
+<!-- AI Welcome -->
+<div class="flex gap-4 items-start group">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-900 to-primary flex-shrink-0 flex items-center justify-center shadow-[0_0_15px_rgba(128,131,255,0.1)]">
+<span class="material-symbols-outlined text-white text-lg" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<div class="flex-1 pt-1.5">
+<div class="text-zinc-400 font-body-base leading-relaxed">Good morning. I'm Bridge, your professional suite assistant. How can I facilitate your productivity today? I'm currently initialized with the latest Model 4.5 Turbo architecture.</div>
+</div>
+</div>
+<!-- User Message -->
+<div class="flex justify-end gap-4 group">
+<div class="max-w-[85%] bg-zinc-900 border border-zinc-800 px-6 py-4 rounded-[2rem] rounded-tr-none text-zinc-200 font-body-base">
+                            Can you help me refine the visual architecture of our new enterprise dashboard? I need to focus on sophisticated minimalism and glassmorphism.
+                        </div>
+</div>
+<!-- AI Message (Complex Layout) -->
+<div class="flex gap-4 items-start">
+<div class="w-10 h-10 rounded-full bg-gradient-to-tr from-indigo-900 to-primary flex-shrink-0 flex items-center justify-center shadow-[0_0_15px_rgba(128,131,255,0.1)]">
+<span class="material-symbols-outlined text-white text-lg" style="font-variation-settings: 'FILL' 1;">bolt</span>
+</div>
+<div class="flex-1 pt-1.5 space-y-6">
+<div class="text-zinc-400 font-body-base leading-relaxed">
+                                Absolutely. For an enterprise context, sophisticated minimalism is achieved through **functional density** rather than emptiness. Here is a conceptual framework we can implement:
+                            </div>
+<!-- Image/Card Grid for AI Suggestions -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-zinc-900/50 border border-zinc-800 p-4 rounded-2xl">
+<div class="aspect-video rounded-xl bg-zinc-800 mb-4 overflow-hidden">
+<img class="w-full h-full object-cover opacity-60" data-alt="A high-end architectural rendering of a glass and steel structure in a digital void, showcasing complex layering and atmospheric depth. The lighting is low-key and dramatic, with soft blue and indigo glows reflecting off semi-transparent surfaces. The style is hyper-modern and professional, capturing the essence of digital sanctuary and sophisticated minimalism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAg_vG1ORXEIwZRYkhZ_8HhsMA5P2nmoj5NchMF86oiICqATWGO-0i8UhqsAdAHdSgu5tkJyRcPcJ8D_5MUWS9sMTN55mYk4LcmW5hPo7PKmuRHWkTBEx4CRjwOtXtFg80fUxVdBnCPs_aBxc3UrXokOumndCFYl5GLe44anqyIKCOpyw7V4M72yelEeedjwAyLghxxwMGO4TG4rAkWeQkpwAZFlxHK3foyDwvrN7dgBj-wl-g6TzzZnvD7GAn3vTxfPYGNR50L8A"/>
+</div>
+<h4 class="text-zinc-200 font-semibold mb-1">Atmospheric Depth</h4>
+<p class="text-zinc-500 text-xs">Utilize backdrop-blur (12px-24px) for z-axis hierarchy instead of heavy shadows.</p>
+</div>
+<div class="bg-zinc-900/50 border border-zinc-800 p-4 rounded-2xl">
+<div class="aspect-video rounded-xl bg-zinc-800 mb-4 overflow-hidden">
+<img class="w-full h-full object-cover opacity-60" data-alt="Close-up macro photography of high-tech fiber optic cables glowing with soft indigo light in a dark, clean room environment. The composition is minimal and organized, representing technological mastery and precision. The aesthetic is monochromatic dark mode with subtle glowing accents that signify active data processing and professional power." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoWcFSi3DikqvVEPs0BkM_5Y7D2GXDhzA7YPPl--0gtMpv6GWqfRahr0KD0Xrn32-Lr20xUVhvnrQ6rt66mdAG9zIeJq7Ob8mItwXco0Q0Kn5oVLnYdW3Ent2w0jdJeaafQr-d9OnTNp0RKUfSWtFt7KYWGm9b8XqJtF0XcdXwpynCkdQIkwFsQ-iAvBV3wOX1bGlfqi5jGqiWYQHyKI6lyyv_6K9oJEGUhxOzUSSbY5rj1y9HS7SVGeRZFk7vQcBoU1lkB20xGw"/>
+</div>
+<h4 class="text-zinc-200 font-semibold mb-1">Tonal Layering</h4>
+<p class="text-zinc-500 text-xs">Shift background tones from Zinc-950 to Zinc-900 for secondary containers.</p>
+</div>
+</div>
+<div class="text-zinc-400 font-body-base leading-relaxed">
+                                Shall we start by drafting the navigation structure or the data visualization cards?
+                            </div>
+</div>
+</div>
+<!-- AI Typing Indicator -->
+<div class="flex gap-4 items-start opacity-50">
+<div class="w-10 h-10 rounded-full bg-zinc-800 flex-shrink-0 flex items-center justify-center animate-pulse">
+<span class="material-symbols-outlined text-indigo-400 text-lg">auto_awesome</span>
+</div>
+<div class="flex space-x-1 items-center h-10">
+<div class="w-1.5 h-1.5 bg-zinc-600 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+<div class="w-1.5 h-1.5 bg-zinc-600 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+<div class="w-1.5 h-1.5 bg-zinc-600 rounded-full animate-bounce"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Input Dock -->
+<div class="w-full p-6 pb-10 flex justify-center bg-gradient-to-t from-zinc-950 via-zinc-950 to-transparent">
+<div class="max-w-[800px] w-full relative">
+<!-- Suggestion Pills -->
+<div class="absolute -top-10 left-0 flex gap-2 overflow-x-auto no-scrollbar pb-2 w-full">
+<button class="whitespace-nowrap px-4 py-1.5 bg-zinc-900/50 border border-zinc-800 text-[11px] text-zinc-400 rounded-full hover:border-zinc-700 hover:text-zinc-200 transition-all">Define Palette</button>
+<button class="whitespace-nowrap px-4 py-1.5 bg-zinc-900/50 border border-zinc-800 text-[11px] text-zinc-400 rounded-full hover:border-zinc-700 hover:text-zinc-200 transition-all">Typography System</button>
+<button class="whitespace-nowrap px-4 py-1.5 bg-zinc-900/50 border border-zinc-800 text-[11px] text-zinc-400 rounded-full hover:border-zinc-700 hover:text-zinc-200 transition-all">Component Library</button>
+</div>
+<!-- Main Pill Input -->
+<div class="w-full glass bg-zinc-950/70 border border-zinc-800 rounded-full flex items-center px-6 py-4 gap-4 focus-within:border-indigo-500/50 transition-all shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)]">
+<button class="text-zinc-500 hover:text-zinc-300 transition-colors">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<input class="flex-1 bg-transparent border-none focus:ring-0 p-0 text-zinc-200 placeholder:text-zinc-600 font-body-base" placeholder="Message Bridge..." type="text"/>
+<div class="flex items-center gap-3">
+<button class="text-zinc-500 hover:text-zinc-300 transition-colors">
+<span class="material-symbols-outlined">mic</span>
+</button>
+<button class="bg-indigo-600 hover:bg-indigo-500 text-white w-10 h-10 rounded-full flex items-center justify-center transition-all scale-100 active:scale-90">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">arrow_upward</span>
+</button>
+</div>
+</div>
+<p class="text-[10px] text-center text-zinc-600 mt-4 font-medium tracking-wide">Bridge can make mistakes. Verify important information.</p>
+</div>
+</div>
+</main>
+</div>
+</body></html>

@@ -13,7 +13,7 @@ connection_string = db_url.replace("postgresql://", "postgresql+psycopg://")
 # 2. Connect to the LOCAL Chroma Database
 CHROMA_PATH = "./chroma_db_llama"
 print("1️⃣ Booting up Local ChromaDB...")
-embedding_model = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+embedding_model = HuggingFaceEmbeddings(model_name="BAAI/bge-m3")
 local_db = Chroma(persist_directory=CHROMA_PATH, embedding_function=embedding_model)
 
 # 3. Extract EVERYTHING from Chroma
@@ -32,7 +32,7 @@ print(f"   -> Successfully extracted {len(documents)} chunks from local storage!
 print("3️⃣ Connecting to Supabase PostgreSQL...")
 cloud_db = PGVector(
     embeddings=embedding_model,
-    collection_name="moroccan_customs", 
+    collection_name="documents", 
     connection=connection_string,
     use_jsonb=True,
 )
