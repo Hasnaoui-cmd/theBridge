@@ -22,7 +22,7 @@ db = SQLDatabase.from_uri(
 )
 
 # 3. Initialize the LLM
-llm = ChatGroq(temperature=0, model_name="llama-3.1-8b-instant", api_key=GROQ_API_KEY)
+llm = ChatGroq(temperature=0, model_name="meta-llama/llama-4-scout-17b-16e-instruct", api_key=GROQ_API_KEY)
 
 # 4. Create the SQL Toolkit
 toolkit = SQLDatabaseToolkit(db=db, llm=llm)
