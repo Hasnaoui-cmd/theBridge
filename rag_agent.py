@@ -29,7 +29,7 @@ db = PGVector(
 retriever = db.as_retriever(search_kwargs={"k": 6}) 
 
 # 3. Setup LLM & Prompt
-llm = ChatGroq(temperature=0, model_name="meta-llama/llama-4-scout-17b-16e-instruct", api_key=GROQ_API_KEY)
+llm = ChatGroq(temperature=0, model_name="llama-3.1-8b-instant", api_key=GROQ_API_KEY)
 
 system_prompt = (
     "You are an expert Moroccan Customs AI. "

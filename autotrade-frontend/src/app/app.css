@@ -489,37 +489,6 @@
   font-weight: 600;
 }
 
-/* Agent status indicator (shown while tools are running) */
-.ai-status {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: #818cf8;           /* indigo-400 */
-  font-size: 0.875rem;
-  font-weight: 500;
-  padding: 0.25rem 0;
-  animation: status-fade-in 0.3s ease-out;
-}
-
-.status-pulse {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 9999px;
-  background: #818cf8;
-  animation: status-pulse-anim 1.5s ease-in-out infinite;
-}
-
-@keyframes status-pulse-anim {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.75); }
-}
-
-@keyframes status-fade-in {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 /* Plain-text AI message (no markdown) */
 .ai-text {
   color: #a1a1aa;
